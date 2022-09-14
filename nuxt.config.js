@@ -1,48 +1,56 @@
+
 export default {
-  mode: 'universal',
-  // Global page headers (https://go.nuxtjs.dev/config-head)
+  mode: 'spa',
+  /*
+  ** Headers of the page
+  */
   head: {
-    title: 'blogspa',
+    title: process.env.npm_package_name || '',
     meta: [
       { charset: 'utf-8' },
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
-      { hid: 'description', name: 'description', content: '' }
+      { hid: 'description', name: 'description', content: process.env.npm_package_description || '' }
     ],
     link: [
       { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }
     ]
   },
-
-  // Global CSS (https://go.nuxtjs.dev/config-css)
+  /*
+  ** Customize the progress-bar color
+  */
+  loading: { color: '#fff' },
+  /*
+  ** Global CSS
+  */
   css: [
-    '@/assets/scss/style.scss',
+    "@/assets/sass/style.scss"
   ],
-
-  // Plugins to run before rendering page (https://go.nuxtjs.dev/config-plugins)
+  /*
+  ** Plugins to load before mounting the App
+  */
   plugins: [
-    '~/plugins/vue-textarea.js',
-    
   ],
-
-  // Auto import components (https://go.nuxtjs.dev/config-components)
-  components: true,
-
-  // Modules for dev and build (recommended) (https://go.nuxtjs.dev/config-modules)
+  /*
+  ** Nuxt.js dev-modules
+  */
   buildModules: [
-    '@nuxtjs/moment',
   ],
-
-  // Modules (https://go.nuxtjs.dev/config-modules)
+  /*
+  ** Nuxt.js modules
+  */
   modules: [
-    '@nuxtjs/axios',
   ],
-
-  // Build Configuration (https://go.nuxtjs.dev/config-build)
+  /*
+  ** Build configuration
+  */
   build: {
-    postcss: null,
+    /*
+    ** You can extend webpack config here
+    */
+    extend (config, ctx) {
+    }
   },
-
-  serverMiddleware: [
-    { path: "/api", handler: "~/api/posts.js" },
-  ],
+  router: {
+    middleware: ['authenticate', 'slider']
+  }
 }

@@ -9,24 +9,11 @@
     "generate": "nuxt generate"
   },
   "dependencies": {
-    "@nuxtjs/axios": "^5.13.6",
-    "apollo-datasource": "^0.5.0",
-    "apollo-server": "^3.10.2",
-    "axios": "^0.27.2",
-    "core-js": "^3.6.5",
-    "graphql": "^16.6.0",
-    "nuxt": "^2.15.2",
-    "sequelize": "^6.21.6",
-    "sqlite3": "^5.0.11",
-    "vue": "^2.6.14",
-    "vue-server-renderer": "^2.6.14",
-    "vue-template-compiler": "^2.6.14",
-    "vue-textarea-autosize": "^1.1.1",
-    "webpack": "^4.46.0"
+    "@nuxtjs/axios": "^5.12.0",
+    "nuxt": "^2.0.0"
   },
   "devDependencies": {
-    "@nuxtjs/moment": "^1.6.1",
-    "sass": "^1.29.0",
-    "sass-loader": "^10.1.0"
+    "node-sass": "^4.14.1",
+    "sass-loader": "^9.0.2"
   }
 }

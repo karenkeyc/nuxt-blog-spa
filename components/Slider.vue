@@ -1,74 +1,66 @@
 <template>
   <div class="slider">
-     <div class="slider-list" :style="{transform: (this.sliderIndex === 0) ? 'translate(0, 0)' : `translate(-${(100 / this.sliderPosts.length) * this.sliderIndex}%, 0)`, width: `${this.sliderPosts.length * 100}%`}">
-        <SliderItem
-        v-for="(post, index) in sliderPosts"
-        :src="post.image"
-        :title="post.title"
-        :postDate="$moment(new Date(post.createdAt)).format('YYYY.MM.DD')"
-        :key="`slider-item-${index}`"
-        :width="100 / sliderPosts.length"
-        :index="index" />
+    <ul class="slider__list" :style="'transform: translateX('+slideTransform+'px)'">
+      <li class="slider__list-item" v-for="(slider, index) in this.getSliderPosts" :key="index">
+        <div class="slider__image-wrapper" :style="{ backgroundImage: `url('${slider.image ? slider.image : 'no-image.png'}')`, width: getSliderWidth + 'px' }">
+          <div class="slider__wrapper">
+            <h2 class="slider__title">
+              <span class="slider__title-text"> {{ slider.title }} </span>
+            </h2>
+            <p class="slider__date">{{ (slider.createdAt).match(/^([\S]+)/g).toString().replace(/[[\]]/g,'') }}</p>
+          </div>
+        </div>
+      </li>  
+    </ul>
+    <div class="slider__nav">
+      <span class="slider__nav-left" @click="doSlide('left')"></span>
+      <span class="slider__nav-right" @click="doSlide('right')"></span>
     </div>
-    <button
-    :class="(this.sliderIndex === 0) ? 'slider-arrow slider-arrow-left is-disabled' : 'slider-arrow slider-arrow-left'"
-    @click="handleArrowClick(-1)">
-      <img
-      src="~/assets/images/slider-arrow-left.png"
-      alt="Slider arrow left" />
-    </button>
-    <button
-    :class="(this.sliderIndex === this.sliderPosts.length - 1) ? 'slider-arrow slider-arrow-right is-disabled' : 'slider-arrow slider-arrow-right'"
-    @click="handleArrowClick(1)">
-      <img
-      src="~/assets/images/slider-arrow-right.png"
-      alt="Slider arrow right" />
-    </button>
-    <ul class="slider-dots">
-      <li
-      v-for="(post, index) in sliderPosts"
-      class="slider-dots-item"
-      :key="`slider-dot-${index}`">
-        <button
-        :class="`slider-dots-button ${(getSliderIndex() === index) ? 'is-active' : ''}`"
-        @click="handleDotsClick(index)"></button>
-      </li>
+    <ul class="slider__pagination">
+      <li class="slider__pagination-item" v-for="(slider, index) in this.getSliderPosts" :key="index" @click="doSlideTo(index +1)" :class="slideCount == index+1 ? 'is-active' : ''"></li>
     </ul>
   </div>
 </template>
 
 <script>
-import {mapGetters} from 'vuex';
-import * as moment from 'moment';
-import SliderItem from './SliderItem';
+import { mapGetters, mapMutations, mapActions } from 'vuex'
 
 export default {
-  name: 'Slider',
-  components: {
-    SliderItem,
+  computed: {
+    ...mapGetters('slide', ['getSliderWidth', 'getSliderPosts', 'getSliderLimit'])
   },
   data() {
     return {
-      sliderIndex: 0,
-      buttonLeftClass: '',
-      buttonRightClass: '',
-      sliderListStyle: {},
+      slideCount: 1,
+      slideTransform: 0,
     }
   },
+  middleware: ['slider'],
   methods: {
-    handleDotsClick(index) {
-      this.sliderIndex = index;
+    doSlide(data) {
+      if(data == "left") {
+        if(!this.slideTransform <= 0) { 
+          this.slideTransform = this.slideTransform + screen.width;
+          this.slideCount--;
+        }
+
+      }
+      else if (data == "right"){  
+        if (this.slideCount != this.getSliderLimit) {
+          this.slideTransform = this.slideTransform - screen.width;
+          this.slideCount++;
+        }
+      }
     },
-    handleArrowClick(value) {
-      let diff = this.sliderIndex + value;
-      this.sliderIndex =  (diff > -1 && diff < this.sliderPosts.length) ? diff : this.sliderIndex;
-    },
-    getSliderIndex() {
-      return this.sliderIndex;
-    },
-  },
-  computed: mapGetters('posts', ['sliderPosts']),
+    doSlideTo(data) {
+      this.slideTransform = (screen.width * (data - 1)) * -1;
+      this.slideCount = data;
+    }
+  }
+  
 }
 </script>
 
-<style lang="scss" src="./Slider.scss">
+<style scoped>
+
+</style>
